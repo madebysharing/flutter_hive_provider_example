@@ -14,10 +14,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   //form dependencies
   bool _toggleFormBool = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); //showBottomSheet dependency
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); //showBottomSheet dependency
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
 
@@ -38,37 +38,49 @@ class _HomeViewState extends State<HomeView> {
     return AnimatedList(
       key: _animatedListKey,
       initialItemCount: _todoController.todoList.length,
-      itemBuilder: (context, index, animation) => _buildListTile(context, index, animation),
+      itemBuilder: (context, index, animation) =>
+          _buildListTile(context, index, animation),
     );
   }
 
   void _addTodo(String item) {
     _todoController.add(item);
-    _animatedListKey.currentState.insertItem(_todoController.todoList.lastIndexOf(_todoController.todoList.last));
+    _animatedListKey.currentState.insertItem(
+        _todoController.todoList.lastIndexOf(_todoController.todoList.last));
   }
 
-  void _deleteTodo(int index){
-    _animatedListKey.currentState.removeItem(index, (BuildContext context, Animation<double> animation) => _buildListTile(context, index, animation),
+  void _deleteTodo(int index) {
+    _animatedListKey.currentState.removeItem(
+      index,
+      (BuildContext context, Animation<double> animation) =>
+          _buildListTile(context, index, animation),
       duration: const Duration(milliseconds: 250),
     );
-    Timer(Duration(milliseconds: 250), () {// reduce animation ghosting
+    Timer(Duration(milliseconds: 250), () {
+      // reduce animation ghosting
       _todoController.del(index);
     });
   }
 
-  void _deleteCompletedTodo(int index){
+  void _deleteCompletedTodo(int index) {
     Timer(Duration(milliseconds: 600), () {
-      _animatedListKey.currentState.removeItem(index, (BuildContext context, Animation<double> animation) => _buildListTile(context, index, animation),
+      _animatedListKey.currentState.removeItem(
+        index,
+        (BuildContext context, Animation<double> animation) =>
+            _buildListTile(context, index, animation),
         duration: const Duration(milliseconds: 250),
       );
-      _todoController.todoList[index].toggleComplete();// reduce animation ghosting
-      Timer(Duration(milliseconds: 100), () {// reduce animation ghosting
+      _todoController.todoList[index]
+          .toggleComplete(); // reduce animation ghosting
+      Timer(Duration(milliseconds: 100), () {
+        // reduce animation ghosting
         _todoController.del(index);
       });
     });
   }
 
-  SizeTransition _buildListTile(BuildContext context, int index, Animation<double> animation) {
+  SizeTransition _buildListTile(
+      BuildContext context, int index, Animation<double> animation) {
     return SizeTransition(
       sizeFactor: animation,
       axis: Axis.vertical,
@@ -97,11 +109,14 @@ class _HomeViewState extends State<HomeView> {
 
   // Start of Bottom Form View //
 
-  void _toggleFormView(){
-    if(_toggleFormBool){
+  void _toggleFormView() {
+    if (_toggleFormBool) {
       Navigator.pop(context);
-    }else{
-      this._scaffoldKey.currentState.showBottomSheet((context) => _buildBottomForm(context));
+    } else {
+      this
+          ._scaffoldKey
+          .currentState
+          .showBottomSheet((context) => _buildBottomForm(context));
     }
     _toggleFormBool = !_toggleFormBool;
   }
@@ -126,8 +141,7 @@ class _HomeViewState extends State<HomeView> {
         height: 250,
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-            border:
-                Border.all(color: Theme.of(context).accentColor, width: 2.0),
+            border: Border.all(color: Colors.amber, width: 2.0),
             borderRadius: BorderRadius.circular(8.0)),
         child: ListView(
           children: <Widget>[
@@ -156,12 +170,10 @@ class _HomeViewState extends State<HomeView> {
             ),
             Container(
               alignment: Alignment.center,
-              child: RaisedButton.icon(
-                color: Theme.of(context).accentColor,
-                icon: Icon(Icons.save_alt),
-                label: Text('Add Todo'),
+              child: ElevatedButton(
+                child: Text('Add Todo'),
                 onPressed: () {
-                  if (_formKey.currentState.validate()){
+                  if (_formKey.currentState.validate()) {
                     _toggleFormView();
                     _addTodo(_textController.text);
                     _textController.text = "";
